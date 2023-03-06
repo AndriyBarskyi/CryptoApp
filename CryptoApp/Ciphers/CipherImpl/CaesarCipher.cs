@@ -15,7 +15,7 @@ namespace CryptoApp.Ciphers.CipherImpl
                 if (index >= 0)
                 {
                     var newChar = alphabet.Value[(index + key) % alphabet.Value.Length];
-                    output.Append(char.IsLower(c) ? char.ToLower(newChar) : newChar);
+                    output.Append(char.IsLower(c) || char.IsWhiteSpace(c) ? char.ToLower(newChar) : newChar);
                 }
                 else
                 {
