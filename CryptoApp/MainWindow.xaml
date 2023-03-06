@@ -19,7 +19,7 @@
                 <MenuItem Name="PrintOutput" Click="PrintOutput_OnClick" Header="_Print" />
             </MenuItem>
             <MenuItem Header="_Encryption">
-                <MenuItem Name="CaesarMenuItem" Header="_Caesar" Click="CaesarMenuItem_OnClick"/>
+                <MenuItem Name="CaesarMenuItem" Header="_Caesar" Click="CaesarMenuItem_OnClick" />
             </MenuItem>
             <MenuItem Name="FrequencyTables" Click="FrequencyTables_OnClick" Header="_Frequency tables" />
             <MenuItem Name="AboutUs" Click="AboutUs_OnClick" Header="_About us" />
@@ -33,9 +33,11 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="Enter your text:" FontWeight="Bold" Margin="0,0,0,5" />
-            <TextBox Name="InputTextBox" Grid.Row="1" Margin="0,0,0,0" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" />
+            <TextBox Name="InputTextBox" Grid.Row="1" Margin="0,0,0,0" VerticalScrollBarVisibility="Auto"
+                     TextWrapping="Wrap" AcceptsReturn="True" />
             <Label Grid.Row="2" Content="Result:" FontWeight="Bold" Margin="0,0,0,0" />
-            <TextBox Name="OutputTextBox" Grid.Row="3" IsReadOnly="True" Margin="0,0,0,10" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" />
+            <TextBox Name="OutputTextBox" Grid.Row="3" IsReadOnly="True" Margin="0,0,0,10"
+                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" />
 
         </Grid>
 
@@ -50,20 +52,26 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,30">
-                <Label Content="Language" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Width="120"/>
+                <Label Content="Language" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Width="120" />
                 <ComboBox Name="LanguageComboBox" FontSize="16" VerticalAlignment="Center" Width="120">
-                    <ComboBoxItem Name="EnglishAlphabet" Selected="EnglishAlphabet_OnSelected" Content="English" IsSelected="True"/>
-                    <ComboBoxItem Name="UkrainianAlphabet" Selected="UkrainianAlphabet_OnSelected" Content="Українська"/>
+                    <ComboBoxItem Name="EnglishAlphabet" Selected="EnglishAlphabet_OnSelected" Content="English"
+                                  IsSelected="True" />
+                    <ComboBoxItem Name="UkrainianAlphabet" Selected="UkrainianAlphabet_OnSelected" Content="Українська" />
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
                 <Label Content="Step:" FontWeight="Bold" Margin="0,20,10,0" VerticalAlignment="Center" />
-                <Slider Name="StepSlider" ValueChanged="StepSlider_OnValueChanged" Value="1" Width="260" Height="20" Minimum="1" />
-                <Label Name="SliderLabel" HorizontalAlignment="Center" Content="1" VerticalAlignment="Center" Margin="0"/>
-                <Button Name="EncryptButton" Click="EncryptButton_Click" Content="Encrypt" Width="100" Margin="0,50,10,0" HorizontalAlignment="Center"/>
-                <Button Name="DecryptButton" Click="DecryptButton_Click" Content="Decrypt" Width="100" Margin="0,10,10,0" HorizontalAlignment="Center"/>
-                <Button Name="BruteForceAttackButton" Click="BruteForceAttackButton_OnClick" Content="Attack" Width="100" Margin="0,10,10,0" HorizontalAlignment="Center"/>
+                <Slider Name="StepSlider" ValueChanged="StepSlider_OnValueChanged" Value="1" Width="260" Height="20"
+                        Minimum="1" />
+                <Label Name="SliderLabel" HorizontalAlignment="Center" Content="1" VerticalAlignment="Center"
+                       Margin="0" />
+                <Button Name="EncryptButton" Click="EncryptButton_Click" Content="Encrypt" Width="100"
+                        Margin="0,50,10,0" HorizontalAlignment="Center" />
+                <Button Name="DecryptButton" Click="DecryptButton_Click" Content="Decrypt" Width="100"
+                        Margin="0,10,10,0" HorizontalAlignment="Center" />
+                <Button Name="BruteForceAttackButton" Click="BruteForceAttackButton_OnClick" Content="Attack"
+                        Width="100" Margin="0,10,10,0" HorizontalAlignment="Center" />
             </StackPanel>
         </Grid>
-        </Grid>
+    </Grid>
 </Window>

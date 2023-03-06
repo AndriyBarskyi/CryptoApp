@@ -1,59 +1,50 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Input;
 using CryptoApp.Ciphers;
 using CryptoApp.Ciphers.Alphabets;
 using CryptoApp.Ciphers.CipherImpl;
-using Cryptologist.Ciphers;
-using Cryptologist.Ciphers.Utils;
 using Microsoft.Win32;
 
 namespace CryptoApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ICipher _selectedCipher = new CaesarCipher();
         private Alphabet _alphabet = Alphabet.English;
-        private byte[] _key; // ключ шифрування
         private byte[] _iv; // вектор ініціалізації
+        private byte[] _key; // ключ шифрування
+        private ICipher _selectedCipher = new CaesarCipher();
+
         public MainWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
             SetMaxStep();
         }
-        
+
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(InputTextBox.Text))
-            {
                 OutputTextBox.Text = _selectedCipher.Encrypt(InputTextBox.Text, (int)StepSlider.Value, _alphabet);
-            }
         }
 
         private void DecryptButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(InputTextBox.Text))
-            {
                 OutputTextBox.Text = _selectedCipher.Decrypt(InputTextBox.Text, (int)StepSlider.Value, _alphabet);
-            }
         }
-        
+
         private void BruteForceAttackButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(InputTextBox.Text))
-            {
                 OutputTextBox.Text = _selectedCipher.BruteForceDecrypt(InputTextBox.Text, _alphabet);
-            }
         }
-        
+
         private void CaesarMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             _selectedCipher = new CaesarCipher();
@@ -61,18 +52,12 @@ namespace CryptoApp
 
         private void SetMaxStep()
         {
-            if (StepSlider != null)
-            {
-                StepSlider.Maximum = _alphabet.Value.Length - 1;
-            }
+            if (StepSlider != null) StepSlider.Maximum = _alphabet.Value.Length - 1;
         }
 
         private void StepSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        { 
-            if (SliderLabel != null && StepSlider != null)
-            {
-                SliderLabel.Content = ((int)StepSlider.Value).ToString();
-            }
+        {
+            if (SliderLabel != null && StepSlider != null) SliderLabel.Content = ((int)StepSlider.Value).ToString();
         }
 
         private void EnglishAlphabet_OnSelected(object sender, RoutedEventArgs e)
@@ -89,7 +74,7 @@ namespace CryptoApp
 
         private void AboutUs_OnClick(object sender, RoutedEventArgs e)
         {
-            AboutWindow aboutWindow = new AboutWindow();
+            var aboutWindow = new AboutWindow();
             aboutWindow.ShowDialog();
         }
 
@@ -100,37 +85,34 @@ namespace CryptoApp
 
         private void OpenFile_OnClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                string fileName = openFileDialog.FileName;
-                string fileContent = File.ReadAllText(fileName);
+                var fileName = openFileDialog.FileName;
+                var fileContent = File.ReadAllText(fileName);
                 InputTextBox.Text = fileContent;
             }
         }
 
         private void SaveToFile_OnClick(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                File.WriteAllText(saveFileDialog.FileName, OutputTextBox.Text);
-            }
+            var saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true) File.WriteAllText(saveFileDialog.FileName, OutputTextBox.Text);
         }
 
         private void PrintOutput_OnClick(object sender, RoutedEventArgs e)
         {
-            PrintDialog printDialog = new PrintDialog();
+            var printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
-                FlowDocument document = new FlowDocument(new Paragraph(new Run(OutputTextBox.Text)));
+                var document = new FlowDocument(new Paragraph(new Run(OutputTextBox.Text)));
                 printDialog.PrintDocument(((IDocumentPaginatorSource)document).DocumentPaginator, "Print Document");
             }
         }
 
         private void FrequencyTables_OnClick(object sender, RoutedEventArgs e)
         {
-            FrequencyTableWindow frequencyTablesWindow = new FrequencyTableWindow();
+            var frequencyTablesWindow = new FrequencyTableWindow();
             frequencyTablesWindow.ShowDialog();
         }
 
@@ -154,10 +136,10 @@ namespace CryptoApp
                     var inputFile = openFileDialog.FileName;
                     var outputFile = saveFileDialog.FileName;
                     var fileEncryptor = new FileEncryptor(_key, _iv);
-                    
+
                     var encryptedFileName = Path.GetFileNameWithoutExtension(outputFile) + ".key";
                     File.WriteAllBytes(encryptedFileName, _key.Concat(_iv).ToArray());
-                    
+
                     fileEncryptor.EncryptFile(inputFile, outputFile);
                     MessageBox.Show("File encrypted successfully!");
                 }
@@ -182,20 +164,20 @@ namespace CryptoApp
                 {
                     var inputFile = openFileDialog.FileName;
                     var outputFile = saveFileDialog.FileName;
-                    
+
                     // Зчитування ключа і вектора ініціалізації з файлу ініціалізації
                     var encryptedFileName = Path.GetFileNameWithoutExtension(inputFile) + ".key";
                     var keyIvBytes = File.ReadAllBytes(encryptedFileName);
                     _key = keyIvBytes.Take(32).ToArray();
                     _iv = keyIvBytes.Skip(32).ToArray();
-                    
+
                     var fileEncryptor = new FileEncryptor(_key, _iv);
                     fileEncryptor.DecryptFile(inputFile, outputFile);
                     MessageBox.Show("File decrypted successfully!");
                 }
             }
         }
-        
+
         private void GenerateKeyIV()
         {
             using (var aes = Aes.Create())
@@ -206,7 +188,7 @@ namespace CryptoApp
                 _iv = aes.IV;
             }
         }
-        
+
         private void SaveKeysToFile(byte[] key, byte[] iv)
         {
             File.WriteAllBytes("key.bin", key);

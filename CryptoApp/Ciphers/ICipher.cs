@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using CryptoApp.Ciphers.Alphabets;
-using Cryptologist.Ciphers.Utils;
+﻿using CryptoApp.Ciphers.Alphabets;
 
 namespace CryptoApp.Ciphers
 {

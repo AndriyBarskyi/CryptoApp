@@ -1,15 +1,12 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
-using AForge.Imaging.Filters;
 
 namespace CryptoApp
 {
     public class FileEncryptor
     {
-        private readonly byte[] _key;
         private readonly byte[] _iv;
+        private readonly byte[] _key;
 
         public FileEncryptor(byte[] key, byte[] iv)
         {
@@ -33,9 +30,7 @@ namespace CryptoApp
                 var buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = inputFileStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
                     cryptoStream.Write(buffer, 0, bytesRead);
-                }
             }
         }
 
@@ -55,9 +50,7 @@ namespace CryptoApp
                 var buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = cryptoStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
                     outputFileStream.Write(buffer, 0, bytesRead);
-                }
             }
         }
     }

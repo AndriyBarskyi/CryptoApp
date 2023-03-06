@@ -13,12 +13,13 @@ namespace CryptoApp
         {
             using (var client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync(_apiUrl + word).ConfigureAwait(false);
+                var response = await client.GetAsync(_apiUrl + word).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine(word);
                     return true;
                 }
+
                 return false;
             }
         }
@@ -27,12 +28,8 @@ namespace CryptoApp
         {
             var words = text.Split(' ');
             foreach (var word in words)
-            {
                 if (!CheckIfWordExists(word.ToLower()).Result)
-                {
                     return false;
-                }
-            }
             return true;
         }
     }

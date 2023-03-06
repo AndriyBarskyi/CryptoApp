@@ -1,9 +1,8 @@
 ﻿<Application x:Class="Cryptologist.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Cryptologist"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <BitmapImage x:Key="AppIcon" UriSource="Icons/cryptoapp.ico"/>
-        </Application.Resources>
+        <BitmapImage x:Key="AppIcon" UriSource="Icons/cryptoapp.ico" />
+    </Application.Resources>
 </Application>
