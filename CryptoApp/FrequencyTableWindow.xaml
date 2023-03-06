@@ -1,0 +1,34 @@
+﻿<Window x:Class="CryptoApp.FrequencyTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:CryptoApp"
+        mc:Ignorable="d"
+        Title="FrequencyTable" Height="450" Width="800" FontFamily="Helvetica Neue" FontSize="16">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <RadioButton x:Name="EnglishRadioButton" Content="English" IsChecked="True" Margin="0,0,10,0" />
+            <RadioButton x:Name="UkrainianRadioButton" Content="Ukrainian" Margin="0,0,20,0" />
+            <ComboBox x:Name="GenreComboBox" SelectionChanged="GenreComboBox_OnSelectionChanged" Width="150" Margin="0, 0, 20, 0">
+                <ComboBoxItem Content="Detective" />
+                <ComboBoxItem Content="Fantasy" />
+                <ComboBoxItem Content="Science Fiction" />
+            </ComboBox>
+            <Button Name="OpenFileButton" Click="OpenFileButton_OnClick" Content="Open file" Width="100" Margin="0,0,20,0"></Button>
+        </StackPanel>
+
+        <DataGrid x:Name="DataGrid" AutoGenerateColumns="False" Margin="10" HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Letter" IsReadOnly="True" Binding="{Binding Letter}" Width="*" />
+                <DataGridTextColumn Header="Frequency" IsReadOnly="True" Binding="{Binding Frequency}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

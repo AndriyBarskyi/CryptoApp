@@ -7,18 +7,18 @@ namespace Cryptologist.Ciphers.Utils
 {
     public abstract class Enumeration : IComparable
 {
-    private readonly int _id;
+    private readonly string _code;
     private readonly string _value;
 
-    protected Enumeration(int id, string value)
+    protected Enumeration(string code, string value)
     {
-        _id = id;
+        _code = code;
         _value = value;
     }
 
-    public int Id
+    public string Code
     {
-        get { return _id; }
+        get { return _code; }
     }
 
     public string Value
@@ -58,25 +58,25 @@ namespace Cryptologist.Ciphers.Utils
         }
 
         var typeMatches = GetType().Equals(obj.GetType());
-        var valueMatches = _id.Equals(otherValue.Id);
+        var valueMatches = _code.Equals(otherValue.Code);
 
         return typeMatches && valueMatches;
     }
 
     public override int GetHashCode()
     {
-        return _id.GetHashCode();
+        return _code.GetHashCode();
     }
 
-    public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
+    /*public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
     {
-        var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
+        var absoluteDifference = Math.Abs(firstValue.Code - secondValue.Code);
         return absoluteDifference;
-    }
+    }*/
 
-    public static T FromValue<T>(int value) where T : Enumeration, new()
+    public static T FromValue<T>(string value) where T : Enumeration, new()
     {
-        var matchingItem = parse<T, int>(value, "value", item => item.Id == value);
+        var matchingItem = parse<T, string>(value, "value", item => item.Code == value);
         return matchingItem;
     }
 
@@ -101,7 +101,7 @@ namespace Cryptologist.Ciphers.Utils
 
     public int CompareTo(object other)
     {
-        return Id.CompareTo(((Enumeration)other).Id);
+        return Code.CompareTo(((Enumeration)other).Code);
     }
 }
 }
