@@ -18,8 +18,9 @@ namespace CryptoApp
     {
         private Alphabet _alphabet = Alphabet.English;
         private byte[] _iv; // вектор ініціалізації
-        private byte[] _key; // ключ шифрування
-        private ICipher _selectedCipher = new CaesarCipher();
+        private byte[] _aesKey; // ключ шифрування
+        private Cipher _selectedCipher = new CaesarCipher();
+        private int _key;
 
         public MainWindow()
         {
@@ -30,43 +31,68 @@ namespace CryptoApp
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(InputTextBox.Text))
-                OutputTextBox.Text = _selectedCipher.Encrypt(InputTextBox.Text, (int)StepSlider.Value, _alphabet);
+            {
+                _selectedCipher.Key = _key;
+                OutputTextBox.Text = _selectedCipher.Encrypt(InputTextBox.Text, _alphabet);
+            }
         }
 
         private void DecryptButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(InputTextBox.Text))
-                OutputTextBox.Text = _selectedCipher.Decrypt(InputTextBox.Text, (int)StepSlider.Value, _alphabet);
+            {
+                _selectedCipher.Key = _key;
+                OutputTextBox.Text = _selectedCipher.Decrypt(InputTextBox.Text, _alphabet);
+            }
         }
 
-        private void BruteForceAttackButton_OnClick(object sender, RoutedEventArgs e)
+        private void AttackButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(InputTextBox.Text))
-                OutputTextBox.Text = _selectedCipher.BruteForceDecrypt(InputTextBox.Text, _alphabet);
+                OutputTextBox.Text =
+                    _selectedCipher.AttackCipher(InputTextBox.Text, _alphabet);
         }
 
         private void CaesarMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             _selectedCipher = new CaesarCipher();
+            CaesarGroupBox.Visibility = Visibility.Visible;
+            TrithemiusGroupBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void TrithemiusMenuItem_OnClick(object sender,
+            RoutedEventArgs e)
+        {
+            _selectedCipher = new TrithemiusCipher();
+            CaesarGroupBox.Visibility = Visibility.Collapsed;
+            TrithemiusGroupBox.Visibility = Visibility.Visible;
         }
 
         private void SetMaxStep()
         {
-            if (StepSlider != null) StepSlider.Maximum = _alphabet.Value.Length - 1;
+            if (StepSlider != null)
+                StepSlider.Maximum = _alphabet.Value.Length - 1;
         }
 
-        private void StepSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void StepSlider_OnValueChanged(object sender,
+            RoutedPropertyChangedEventArgs<double> e)
         {
-            if (SliderLabel != null && StepSlider != null) SliderLabel.Content = ((int)StepSlider.Value).ToString();
+            if (CaesarGroupBox != null && StepSlider != null)
+            {
+                _key = (int)StepSlider.Value;
+                CaesarGroupBox.Header = "Step: " + (int)StepSlider.Value;
+            }
         }
 
-        private void EnglishAlphabet_OnSelected(object sender, RoutedEventArgs e)
+        private void EnglishAlphabet_OnSelected(object sender,
+            RoutedEventArgs e)
         {
             _alphabet = Alphabet.English;
             SetMaxStep();
         }
 
-        private void UkrainianAlphabet_OnSelected(object sender, RoutedEventArgs e)
+        private void UkrainianAlphabet_OnSelected(object sender,
+            RoutedEventArgs e)
         {
             _alphabet = Alphabet.Ukrainian;
             SetMaxStep();
@@ -97,7 +123,8 @@ namespace CryptoApp
         private void SaveToFile_OnClick(object sender, RoutedEventArgs e)
         {
             var saveFileDialog = new SaveFileDialog();
-            if (saveFileDialog.ShowDialog() == true) File.WriteAllText(saveFileDialog.FileName, OutputTextBox.Text);
+            if (saveFileDialog.ShowDialog() == true)
+                File.WriteAllText(saveFileDialog.FileName, OutputTextBox.Text);
         }
 
         private void PrintOutput_OnClick(object sender, RoutedEventArgs e)
@@ -105,8 +132,12 @@ namespace CryptoApp
             var printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
-                var document = new FlowDocument(new Paragraph(new Run(OutputTextBox.Text)));
-                printDialog.PrintDocument(((IDocumentPaginatorSource)document).DocumentPaginator, "Print Document");
+                var document =
+                    new FlowDocument(
+                        new Paragraph(new Run(OutputTextBox.Text)));
+                printDialog.PrintDocument(
+                    ((IDocumentPaginatorSource)document).DocumentPaginator,
+                    "Print Document");
             }
         }
 
@@ -135,10 +166,12 @@ namespace CryptoApp
                 {
                     var inputFile = openFileDialog.FileName;
                     var outputFile = saveFileDialog.FileName;
-                    var fileEncryptor = new FileEncryptor(_key, _iv);
+                    var fileEncryptor = new FileEncryptor(_aesKey, _iv);
 
-                    var encryptedFileName = Path.GetFileNameWithoutExtension(outputFile) + ".key";
-                    File.WriteAllBytes(encryptedFileName, _key.Concat(_iv).ToArray());
+                    var encryptedFileName =
+                        Path.GetFileNameWithoutExtension(outputFile) + ".key";
+                    File.WriteAllBytes(encryptedFileName,
+                        _aesKey.Concat(_iv).ToArray());
 
                     fileEncryptor.EncryptFile(inputFile, outputFile);
                     MessageBox.Show("File encrypted successfully!");
@@ -166,12 +199,13 @@ namespace CryptoApp
                     var outputFile = saveFileDialog.FileName;
 
                     // Зчитування ключа і вектора ініціалізації з файлу ініціалізації
-                    var encryptedFileName = Path.GetFileNameWithoutExtension(inputFile) + ".key";
+                    var encryptedFileName =
+                        Path.GetFileNameWithoutExtension(inputFile) + ".key";
                     var keyIvBytes = File.ReadAllBytes(encryptedFileName);
-                    _key = keyIvBytes.Take(32).ToArray();
+                    _aesKey = keyIvBytes.Take(32).ToArray();
                     _iv = keyIvBytes.Skip(32).ToArray();
 
-                    var fileEncryptor = new FileEncryptor(_key, _iv);
+                    var fileEncryptor = new FileEncryptor(_aesKey, _iv);
                     fileEncryptor.DecryptFile(inputFile, outputFile);
                     MessageBox.Show("File decrypted successfully!");
                 }
@@ -184,25 +218,77 @@ namespace CryptoApp
             {
                 aes.GenerateKey();
                 aes.GenerateIV();
-                _key = aes.Key;
+                _aesKey = aes.Key;
                 _iv = aes.IV;
             }
         }
 
-        private void SaveKeysToFile(byte[] key, byte[] iv)
+        private void TrithemiusLinearQ_OnSelected
+            (object sender, RoutedEventArgs e)
         {
-            File.WriteAllBytes("key.bin", key);
-            File.WriteAllBytes("iv.bin", iv);
+            if (!TrithemiusGroupBox.IsVisible) return;
+            TrithemiusLinearQInputA.Visibility = Visibility.Visible;
+            ALabel.Visibility = Visibility.Visible;
+            TrithemiusLinearQInputB.Visibility = Visibility.Visible;
+            BLabel.Visibility = Visibility.Visible;
+            TrithemiusNonlinearQInputC.Visibility = Visibility.Collapsed;
+            CLabel.Visibility = Visibility.Collapsed;
+            TrithemiusWordKeyInput.Visibility = Visibility.Collapsed;
         }
 
-        private byte[] LoadKeyFromFile()
+        private void TrithemiusNonLinearQ_OnSelected
+            (object sender, RoutedEventArgs e)
         {
-            return File.ReadAllBytes("key.bin");
+            if (!TrithemiusGroupBox.IsVisible) return;
+            TrithemiusLinearQInputA.Visibility = Visibility.Visible;
+            ALabel.Visibility = Visibility.Visible;
+            TrithemiusLinearQInputB.Visibility = Visibility.Visible;
+            BLabel.Visibility = Visibility.Visible;
+            TrithemiusNonlinearQInputC.Visibility = Visibility.Visible;
+            CLabel.Visibility = Visibility.Visible;
+            TrithemiusWordKeyInput.Visibility = Visibility.Collapsed;
         }
 
-        private byte[] LoadIvFromFile()
+
+        private void TrithemiusKeyWord_OnSelected(object sender,
+            RoutedEventArgs e)
         {
-            return File.ReadAllBytes("iv.bin");
+            if (!TrithemiusGroupBox.IsVisible) return;
+            TrithemiusLinearQInputA.Visibility = Visibility.Collapsed;
+            ALabel.Visibility = Visibility.Collapsed;
+            TrithemiusLinearQInputB.Visibility = Visibility.Collapsed;
+            BLabel.Visibility = Visibility.Collapsed;
+            TrithemiusNonlinearQInputC.Visibility = Visibility.Collapsed;
+            CLabel.Visibility = Visibility.Collapsed;
+            TrithemiusWordKeyInput.Visibility = Visibility.Visible;
+        }
+
+
+        private void TrithemiusInput_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (TrithemiusLinearQInputA.IsVisible && 
+                TrithemiusLinearQInputB.IsVisible && TrithemiusNonlinearQInputC.IsVisible)
+            {
+                _selectedCipher.A = (TrithemiusLinearQInputA.Value).GetValueOrDefault();
+                _selectedCipher.B = (TrithemiusLinearQInputB.Value).GetValueOrDefault();
+                _selectedCipher.C = (TrithemiusNonlinearQInputC.Value).GetValueOrDefault();
+            }
+            else if (TrithemiusLinearQInputA.IsVisible && 
+                     TrithemiusLinearQInputB.IsVisible && !TrithemiusNonlinearQInputC.IsVisible)
+            {
+                _selectedCipher.A = (TrithemiusLinearQInputA.Value).GetValueOrDefault();
+                _selectedCipher.B = (TrithemiusLinearQInputB.Value).GetValueOrDefault();
+            }
+
+        }
+
+        private void TrithemiusWordKeyInput_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TrithemiusWordKeyInput.IsVisible && !string.IsNullOrEmpty
+            (TrithemiusWordKeyInput.Text))
+            {
+                _selectedCipher.Key = TrithemiusWordKeyInput.Text.GetHashCode();
+            }
         }
     }
 }

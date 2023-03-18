@@ -5,10 +5,10 @@ namespace CryptoApp.Ciphers.Alphabets
     public class Alphabet : Enumeration
     {
         public static readonly Alphabet English
-            = new Alphabet("eng", "ABCDEFGHIJKLMNOPQRSTUVWXYZ ");
+            = new Alphabet("eng", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
         public static readonly Alphabet Ukrainian
-            = new Alphabet("ukr", "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ ");
+            = new Alphabet("ukr", "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ");
 
         private Alphabet(string code, string alphabet)
             : base(code, alphabet)

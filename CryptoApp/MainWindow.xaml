@@ -3,25 +3,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Cryptologist" MinWidth="800" MinHeight="450" FontFamily="Helvetica Neue" FontSize="16">
+        Title="Cryptologist" MinWidth="800" MinHeight="450"
+        FontFamily="Helvetica Neue" FontSize="18">
     <Grid Background="#F0F0F0">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="350" />
         </Grid.ColumnDefinitions>
-        <Menu Grid.Row="0" FontFamily="Helvetica Neue" FontSize="16">
+        <Menu Grid.Row="0" FontFamily="Helvetica Neue" FontSize="18">
             <MenuItem Header="_File">
-                <MenuItem Name="CipherFile" Click="CipherFile_OnClick" Header="_Cipher" />
-                <MenuItem Name="DecipherFile" Click="DecipherFile_OnClick" Header="_Decipher" />
-                <MenuItem Name="OpenFile" Click="OpenFile_OnClick" Header="_Open" />
-                <MenuItem Name="SaveToFile" Click="SaveToFile_OnClick" Header="_Save" />
-                <MenuItem Name="PrintOutput" Click="PrintOutput_OnClick" Header="_Print" />
+                <MenuItem Name="CipherFile" Click="CipherFile_OnClick"
+                          Header="_Cipher" />
+                <MenuItem Name="DecipherFile" Click="DecipherFile_OnClick"
+                          Header="_Decipher" />
+                <MenuItem Name="OpenFile" Click="OpenFile_OnClick"
+                          Header="_Open" />
+                <MenuItem Name="SaveToFile" Click="SaveToFile_OnClick"
+                          Header="_Save" />
+                <MenuItem Name="PrintOutput" Click="PrintOutput_OnClick"
+                          Header="_Print" />
             </MenuItem>
             <MenuItem Header="_Encryption">
-                <MenuItem Name="CaesarMenuItem" Header="_Caesar" Click="CaesarMenuItem_OnClick" />
+                <MenuItem Name="CaesarMenuItem" Header="_Caesar"
+                          Click="CaesarMenuItem_OnClick" />
+                <MenuItem Name="TrithemiusMenuItem" Header="_Trithemius"
+                          Click="TrithemiusMenuItem_OnClick" />
             </MenuItem>
-            <MenuItem Name="FrequencyTables" Click="FrequencyTables_OnClick" Header="_Frequency tables" />
+            <MenuItem Name="FrequencyTables" Click="FrequencyTables_OnClick"
+                      Header="_Frequency tables" />
             <MenuItem Name="AboutUs" Click="AboutUs_OnClick" Header="_About us" />
             <MenuItem Name="Exit" Header="_Exit" Click="Exit_OnClick" />
         </Menu>
@@ -32,12 +43,17 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Content="Enter your text:" FontWeight="Bold" Margin="0,0,0,5" />
-            <TextBox Name="InputTextBox" Grid.Row="1" Margin="0,0,0,0" VerticalScrollBarVisibility="Auto"
+            <Label Grid.Row="0" Content="Enter your text:" FontWeight="Bold"
+                   Margin="0,0,0,5" />
+            <TextBox Grid.Row="1" Name="InputTextBox" Margin="0,0,0,0"
+                     VerticalScrollBarVisibility="Auto"
                      TextWrapping="Wrap" AcceptsReturn="True" />
-            <Label Grid.Row="2" Content="Result:" FontWeight="Bold" Margin="0,0,0,0" />
-            <TextBox Name="OutputTextBox" Grid.Row="3" IsReadOnly="True" Margin="0,0,0,10"
-                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" />
+            <Label Grid.Row="2" Content="Result:" FontWeight="Bold"
+                   Margin="0,0,0,0" />
+            <TextBox Grid.Row="3" Name="OutputTextBox" IsReadOnly="True"
+                     Margin="0,0,0,10"
+                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
+                     AcceptsReturn="True" />
 
         </Grid>
 
@@ -48,29 +64,89 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,30">
-                <Label Content="Language" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Width="120" />
-                <ComboBox Name="LanguageComboBox" FontSize="16" VerticalAlignment="Center" Width="120">
-                    <ComboBoxItem Name="EnglishAlphabet" Selected="EnglishAlphabet_OnSelected" Content="English"
+            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,80,0,20"
+                        VerticalAlignment="Center">
+                <Label Content="Language" FontWeight="Bold"
+                       VerticalAlignment="Center" Margin="0,0,10,0" Width="120" />
+                <ComboBox Name="LanguageComboBox" VerticalAlignment="Center"
+                          Width="150">
+                    <ComboBoxItem Name="EnglishAlphabet"
+                                  Selected="EnglishAlphabet_OnSelected"
+                                  Content="English"
                                   IsSelected="True" />
-                    <ComboBoxItem Name="UkrainianAlphabet" Selected="UkrainianAlphabet_OnSelected" Content="Українська" />
+                    <ComboBoxItem Name="UkrainianAlphabet"
+                                  Selected="UkrainianAlphabet_OnSelected"
+                                  Content="Українська" />
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
-                <Label Content="Step:" FontWeight="Bold" Margin="0,20,10,0" VerticalAlignment="Center" />
-                <Slider Name="StepSlider" ValueChanged="StepSlider_OnValueChanged" Value="1" Width="260" Height="20"
-                        Minimum="1" />
-                <Label Name="SliderLabel" HorizontalAlignment="Center" Content="1" VerticalAlignment="Center"
-                       Margin="0" />
-                <Button Name="EncryptButton" Click="EncryptButton_Click" Content="Encrypt" Width="100"
-                        Margin="0,50,10,0" HorizontalAlignment="Center" />
-                <Button Name="DecryptButton" Click="DecryptButton_Click" Content="Decrypt" Width="100"
+                <GroupBox Visibility="Visible" Name="CaesarGroupBox"
+                          Header="Step" Margin="0,10,0,10" Height="50"
+                          Width="320">
+                    <Slider Name="StepSlider"
+                            ValueChanged="StepSlider_OnValueChanged" Value="1"
+                            Width="250" Height="20"
+                            Minimum="1" />
+                </GroupBox>
+                <GroupBox x:Name="TrithemiusGroupBox" Header="Key"
+                          Visibility="Collapsed" Margin="0,0,0,20">
+                    <StackPanel Orientation="Vertical" Margin="0,10">
+                        <ComboBox Name="TrithemiusKeyComboBox"
+                                  VerticalAlignment="Center" Width="150">
+                            <ComboBoxItem Name="TrithemiusLinearQ"
+                                          Selected="TrithemiusLinearQ_OnSelected"
+                                          Content="Linear Equation"
+                                          IsSelected="True" />
+                            <ComboBoxItem Name="TrithemiusNonLinearQ"
+                                          Selected="TrithemiusNonLinearQ_OnSelected"
+                                          Content="Nonlinear Equation" />
+                            <ComboBoxItem Name="TrithemiusKeyWord"
+                                          Selected="TrithemiusKeyWord_OnSelected"
+                                          Content="Key Word" />
+                        </ComboBox>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,10"
+                                    HorizontalAlignment="Center">
+                            <StackPanel VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                <Label Name="ALabel" Content="A:" />
+                                <xctk:IntegerUpDown
+                                    Name="TrithemiusLinearQInputA"
+                                    Visibility="Visible" Minimum="1" 
+                                    Value="1" ValueChanged="TrithemiusInput_OnValueChanged"/>
+                                <Label Name="BLabel" Content="B:" />
+                                <xctk:IntegerUpDown
+                                    Name="TrithemiusLinearQInputB"
+                                    Visibility="Visible" Minimum="1" Value="1"
+                                    ValueChanged="TrithemiusInput_OnValueChanged"/>
+                                <Label Name="CLabel" Content="C:" />
+                                <xctk:IntegerUpDown
+                                    Name="TrithemiusNonlinearQInputC"
+                                    Visibility="Collapsed" Minimum="1"
+                                    Value="1"
+                                    ValueChanged="TrithemiusInput_OnValueChanged" />
+                            </StackPanel>
+                            <TextBox Name="TrithemiusWordKeyInput"
+                                     Visibility="Collapsed" Width="200"
+                                     Height="30" VerticalAlignment="Center"
+                                     TextChanged="TrithemiusWordKeyInput_OnTextChanged"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <Button Name="EncryptButton" Click="EncryptButton_Click"
+                        Content="Encrypt" Width="120" Height="40"
+                        Margin="0,30,10,0" HorizontalAlignment="Center" />
+                <Button Name="DecryptButton" Click="DecryptButton_Click"
+                        Content="Decrypt" Width="120" Height="40"
                         Margin="0,10,10,0" HorizontalAlignment="Center" />
-                <Button Name="BruteForceAttackButton" Click="BruteForceAttackButton_OnClick" Content="Attack"
-                        Width="100" Margin="0,10,10,0" HorizontalAlignment="Center" />
+                <Button Name="BruteForceAttackButton"
+                        Click="AttackButton_OnClick" 
+                        Content="Attack"
+                        Height="40"
+                        Width="120" Margin="0,10,10,0"
+                        HorizontalAlignment="Center" />
             </StackPanel>
         </Grid>
     </Grid>

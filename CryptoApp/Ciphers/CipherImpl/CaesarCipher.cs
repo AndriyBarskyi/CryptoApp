@@ -4,9 +4,9 @@ using CryptoApp.Ciphers.Alphabets;
 
 namespace CryptoApp.Ciphers.CipherImpl
 {
-    public class CaesarCipher : ICipher
+    public class CaesarCipher : Cipher
     {
-        public string Encrypt(string input, int key, Alphabet alphabet)
+        public override string Encrypt(string input, Alphabet alphabet)
         {
             var output = new StringBuilder(input.Length);
             foreach (var c in input)
@@ -14,8 +14,11 @@ namespace CryptoApp.Ciphers.CipherImpl
                 var index = alphabet.Value.IndexOf(char.ToUpper(c));
                 if (index >= 0)
                 {
-                    var newChar = alphabet.Value[(index + key) % alphabet.Value.Length];
-                    output.Append(char.IsLower(c) || char.IsWhiteSpace(c) ? char.ToLower(newChar) : newChar);
+                    var newChar =
+                        alphabet.Value[(index + Key) % alphabet.Value.Length];
+                    output.Append(char.IsLower(c) || char.IsWhiteSpace(c)
+                        ? char.ToLower(newChar)
+                        : newChar);
                 }
                 else
                 {
@@ -26,36 +29,43 @@ namespace CryptoApp.Ciphers.CipherImpl
             return output.ToString();
         }
 
-        public string Decrypt(string input, int key, Alphabet alphabet)
+        public override string Decrypt(string input, Alphabet alphabet)
         {
-            return Encrypt(input, alphabet.Value.Length - key, alphabet);
+            Key = alphabet.Value.Length - Key;
+            return Encrypt(input, alphabet);
         }
 
-        public string BruteForceDecrypt(string input, Alphabet alphabet)
+        public override string AttackCipher(string input, Alphabet alphabet)
         {
             var possibleDecryptions = new List<string>();
             var dictionaryChecker = new DictionaryChecker();
             for (var i = 0; i < alphabet.Value.Length; i++)
             {
                 var inputWords = input.Split();
-                for (var j = 0; j < (inputWords.Length < 10 ? inputWords.Length : 10); j++)
+                for (var j = 0;
+                     j < (inputWords.Length < 10 ? inputWords.Length : 10);
+                     j++)
                 {
-                    if (alphabet.Equals(Alphabet.English) && inputWords[j].Length > 3 && dictionaryChecker
-                            .CheckIfWordExists(Decrypt(inputWords[j], i, alphabet)).Result)
+                    Key = i;
+                    if (alphabet.Equals(Alphabet.English) &&
+                        inputWords[j].Length > 3 && dictionaryChecker
+                            .CheckIfWordExists(Decrypt(inputWords[j],
+                                alphabet)).Result)
                     {
-                        possibleDecryptions.Add(Decrypt(input, i, alphabet));
+                        possibleDecryptions.Add(Decrypt(input, alphabet));
                         break;
                     }
 
                     if (!alphabet.Equals(Alphabet.English))
                     {
-                        possibleDecryptions.Add(Decrypt(input, i, alphabet));
+                        possibleDecryptions.Add(Decrypt(input, alphabet));
                         break;
                     }
                 }
             }
 
-            return string.Join("\n-------------------------------\n", possibleDecryptions);
+            return string.Join("\n-------------------------------\n",
+                possibleDecryptions);
         }
     }
 }

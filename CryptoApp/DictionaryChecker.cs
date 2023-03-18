@@ -7,13 +7,15 @@ namespace CryptoApp
 {
     public class DictionaryChecker
     {
-        private readonly string _apiUrl = ConfigurationManager.AppSettings["engDictApiUrl"];
+        private readonly string _apiUrl =
+            ConfigurationManager.AppSettings["engDictApiUrl"];
 
         public async Task<bool> CheckIfWordExists(string word)
         {
             using (var client = new HttpClient())
             {
-                var response = await client.GetAsync(_apiUrl + word).ConfigureAwait(false);
+                var response = await client.GetAsync(_apiUrl + word)
+                    .ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine(word);
@@ -22,15 +24,6 @@ namespace CryptoApp
 
                 return false;
             }
-        }
-
-        public bool CheckIfTextIsValid(string text)
-        {
-            var words = text.Split(' ');
-            foreach (var word in words)
-                if (!CheckIfWordExists(word.ToLower()).Result)
-                    return false;
-            return true;
         }
     }
 }

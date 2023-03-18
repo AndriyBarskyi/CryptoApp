@@ -32,10 +32,12 @@ namespace CryptoApp
         {
             if (EnglishRadioButton.IsChecked == true)
                 _alphabet = Alphabet.English;
-            else if (UkrainianRadioButton.IsChecked == true) _alphabet = Alphabet.Ukrainian;
+            else if (UkrainianRadioButton.IsChecked == true)
+                _alphabet = Alphabet.Ukrainian;
         }
 
-        private async void GenreComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void GenreComboBox_OnSelectionChanged(object sender,
+            SelectionChangedEventArgs e)
         {
             await UpdateFrequencies();
         }
@@ -44,9 +46,15 @@ namespace CryptoApp
         {
             if (_frequencyTable == null) return;
             _frequencyTable = new FrequencyTable();
-            var genre = GenreComboBox.SelectedValue != null ? GenreComboBox.SelectedValue.ToString() : "";
-            var url = GetSiteUrl(_alphabet.Code + genre.Replace("System.Windows.Controls.ComboBoxItem: ", ""));
-            _frequencyTable.CalculateFrequencies(await DownloadText(url), _alphabet);
+            var genre = GenreComboBox.SelectedValue != null
+                ? GenreComboBox.SelectedValue.ToString()
+                : "";
+            var url = GetSiteUrl(_alphabet.Code +
+                                 genre.Replace(
+                                     "System.Windows.Controls.ComboBoxItem: ",
+                                     ""));
+            _frequencyTable.CalculateFrequencies(await DownloadText(url),
+                _alphabet);
 
             DisplayFrequencies();
         }
@@ -55,7 +63,9 @@ namespace CryptoApp
         {
             var items = _frequencyTable.GetFrequencies()
                 .Select(kvp =>
-                    new FrequencyTableItem(kvp.Key.ToString(), Math.Round(kvp.Value, 6, MidpointRounding.AwayFromZero)))
+                    new FrequencyTableItem(kvp.Key.ToString(),
+                        Math.Round(kvp.Value, 6,
+                            MidpointRounding.AwayFromZero)))
                 .ToList();
             DataGrid.ItemsSource = items;
         }

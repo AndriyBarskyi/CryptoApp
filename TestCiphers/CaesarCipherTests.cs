@@ -13,12 +13,12 @@ namespace TestCiphers
             {
                 // Arrange
                 var cipher = new CaesarCipher();
+                cipher.Key = 1;
                 var input = "HELLO";
-                var key = 1;
                 var alphabet = Alphabet.English;
 
                 // Act
-                var result = cipher.Encrypt(input, key, alphabet);
+                var result = cipher.Encrypt(input, alphabet);
 
                 // Assert
                 Assert.Equal("IFMMP", result);
@@ -30,11 +30,11 @@ namespace TestCiphers
                 // Arrange
                 var cipher = new CaesarCipher();
                 var input = "IFMMP";
-                var key = 1;
+                cipher.Key = 1;
                 var alphabet = Alphabet.English;
 
                 // Act
-                var result = cipher.Decrypt(input, key, alphabet);
+                var result = cipher.Decrypt(input, alphabet);
 
                 // Assert
                 Assert.Equal("HELLO", result);
@@ -46,10 +46,10 @@ namespace TestCiphers
                 string input = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
                 string expectedOutput = "ГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯАБВ";
                 Alphabet alphabet = Alphabet.Ukrainian;
-                int key = 3;
                 CaesarCipher cipher = new CaesarCipher();
+                cipher.Key = 3;
 
-                string output = cipher.Encrypt(input, key, alphabet);
+                string output = cipher.Encrypt(input, alphabet);
 
                 Assert.Equal(expectedOutput, output);
             }
@@ -60,10 +60,10 @@ namespace TestCiphers
                 string input = "ГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯАБВ";
                 string expectedOutput = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
                 Alphabet alphabet = Alphabet.Ukrainian;
-                int key = 3;
                 CaesarCipher cipher = new CaesarCipher();
+                cipher.Key = 3;
 
-                string output = cipher.Decrypt(input, key, alphabet);
+                string output = cipher.Decrypt(input, alphabet);
 
                 Assert.Equal(expectedOutput, output);
             }
@@ -74,10 +74,10 @@ namespace TestCiphers
                 string input = "";
                 string expectedOutput = "";
                 Alphabet alphabet = Alphabet.English;
-                int key = 3;
                 CaesarCipher cipher = new CaesarCipher();
+                cipher.Key = 3;
 
-                string output = cipher.Encrypt(input, key, alphabet);
+                string output = cipher.Encrypt(input, alphabet);
 
                 Assert.Equal(expectedOutput, output);
             }
@@ -88,10 +88,10 @@ namespace TestCiphers
                 string input = "";
                 string expectedOutput = "";
                 Alphabet alphabet = Alphabet.English;
-                int key = 3;
                 CaesarCipher cipher = new CaesarCipher();
+                cipher.Key = 3;
 
-                string output = cipher.Decrypt(input, key, alphabet);
+                string output = cipher.Decrypt(input, alphabet);
 
                 Assert.Equal(expectedOutput, output);
             }

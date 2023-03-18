@@ -30,7 +30,9 @@ namespace Cryptologist.Ciphers.Utils
         public static IEnumerable<T> GetAll<T>() where T : Enumeration, new()
         {
             var type = typeof(T);
-            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            var fields = type.GetFields(BindingFlags.Public |
+                                        BindingFlags.Static |
+                                        BindingFlags.DeclaredOnly);
 
             foreach (var info in fields)
             {
@@ -66,23 +68,28 @@ namespace Cryptologist.Ciphers.Utils
 
         public static T FromValue<T>(string value) where T : Enumeration, new()
         {
-            var matchingItem = parse<T, string>(value, "value", item => item.Code == value);
+            var matchingItem =
+                parse<T, string>(value, "value", item => item.Code == value);
             return matchingItem;
         }
 
-        public static T FromDisplayName<T>(string displayName) where T : Enumeration, new()
+        public static T FromDisplayName<T>(string displayName)
+            where T : Enumeration, new()
         {
-            var matchingItem = parse<T, string>(displayName, "display name", item => item.Value == displayName);
+            var matchingItem = parse<T, string>(displayName, "display name",
+                item => item.Value == displayName);
             return matchingItem;
         }
 
-        private static T parse<T, K>(K value, string description, Func<T, bool> predicate) where T : Enumeration, new()
+        private static T parse<T, K>(K value, string description,
+            Func<T, bool> predicate) where T : Enumeration, new()
         {
             var matchingItem = GetAll<T>().FirstOrDefault(predicate);
 
             if (matchingItem == null)
             {
-                var message = string.Format("'{0}' is not a valid {1} in {2}", value, description, typeof(T));
+                var message = string.Format("'{0}' is not a valid {1} in {2}",
+                    value, description, typeof(T));
                 throw new ApplicationException(message);
             }
 
