@@ -1,4 +1,5 @@
-﻿using Cryptologist.Ciphers.Utils;
+﻿using System;
+using Cryptologist.Ciphers.Utils;
 
 namespace CryptoApp.Ciphers.Alphabets
 {
@@ -17,7 +18,7 @@ namespace CryptoApp.Ciphers.Alphabets
 
         public bool Contains(char c)
         {
-            return Value.IndexOf(c.ToString().ToUpper()) != -1;
+            return Value.IndexOf(c.ToString().ToUpper(), StringComparison.Ordinal) != -1;
         }
     }
 }
