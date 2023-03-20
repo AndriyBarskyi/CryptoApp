@@ -27,6 +27,8 @@ namespace CryptoApp
             InitializeComponent();
             SetMaxStep();
         }
+        
+        public delegate void SetOutputTextDelegate(string text);
 
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
@@ -48,9 +50,24 @@ namespace CryptoApp
 
         private void AttackButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(InputTextBox.Text))
+            if (!string.IsNullOrEmpty(InputTextBox.Text) &&
+                TrithemiusGroupBox.Visibility != Visibility.Visible)
+            {
                 OutputTextBox.Text =
                     _selectedCipher.AttackCipher(InputTextBox.Text, _alphabet);
+            }
+            else if (!string.IsNullOrEmpty(InputTextBox.Text))
+            {
+                var frequencyTablesWindow = new FrequencyTableWindow(
+                    (TrithemiusCipher)_selectedCipher, (outputText) => SetOutputText
+                        (outputText), InputTextBox.Text);
+                frequencyTablesWindow.ShowDialog();
+            }
+        }
+        
+        private void SetOutputText(string text)
+        {
+            OutputTextBox.Text = text;
         }
 
         private void CaesarMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -143,7 +160,9 @@ namespace CryptoApp
 
         private void FrequencyTables_OnClick(object sender, RoutedEventArgs e)
         {
-            var frequencyTablesWindow = new FrequencyTableWindow();
+            var frequencyTablesWindow = new FrequencyTableWindow(
+            (TrithemiusCipher)_selectedCipher, (outputText) => SetOutputText
+            (outputText), InputTextBox.Text);
             frequencyTablesWindow.ShowDialog();
         }
 

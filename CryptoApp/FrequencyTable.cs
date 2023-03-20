@@ -31,7 +31,8 @@ namespace CryptoApp
 
         public Dictionary<char, double> GetFrequencies()
         {
-            return _frequencies;
+            return _frequencies.OrderByDescending(x => x.Value).ToDictionary
+            (x => x.Key, x => x.Value);
         }
     }
 }

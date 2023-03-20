@@ -28,6 +28,9 @@
             <Button Name="OpenFileButton" Click="OpenFileButton_OnClick"
                     Content="Open file" Width="100"
                     Margin="0,0,20,0" />
+            <Button Name="UseForAttackButton" Click="UseForAttackButton_OnClick"
+                    Content="Use for attack" Width="100"
+                    Margin="0,0,20,0" />
         </StackPanel>
 
         <DataGrid x:Name="DataGrid" AutoGenerateColumns="False" Margin="10"

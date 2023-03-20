@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using CryptoApp.Ciphers.Alphabets;
+using CryptoApp.Ciphers.CipherImpl;
 using Microsoft.Win32;
 
 namespace CryptoApp
@@ -16,11 +17,17 @@ namespace CryptoApp
     {
         private Alphabet _alphabet = Alphabet.English;
         private FrequencyTable _frequencyTable;
+        private TrithemiusCipher _trithemiusCipher;
+        private string _mainInputText;
+        public event MainWindow.SetOutputTextDelegate OutputText;
 
-        public FrequencyTableWindow()
+        public FrequencyTableWindow(TrithemiusCipher trithemiusCipher,
+            MainWindow.SetOutputTextDelegate setOutputTextDelegate, string inputText)
         {
             InitializeComponent();
-
+            _mainInputText = inputText;
+            OutputText += setOutputTextDelegate;
+            _trithemiusCipher = trithemiusCipher;
             EnglishRadioButton.Checked += OnCheckedChanged;
             UkrainianRadioButton.Checked += OnCheckedChanged;
 
@@ -28,7 +35,7 @@ namespace CryptoApp
             DataContext = this;
         }
 
-        private async void OnCheckedChanged(object sender, RoutedEventArgs e)
+        private void OnCheckedChanged(object sender, RoutedEventArgs e)
         {
             if (EnglishRadioButton.IsChecked == true)
                 _alphabet = Alphabet.English;
@@ -68,6 +75,12 @@ namespace CryptoApp
                             MidpointRounding.AwayFromZero)))
                 .ToList();
             DataGrid.ItemsSource = items;
+            SetFrequencyTable(_trithemiusCipher, _frequencyTable);
+        }
+
+        private void SetFrequencyTable(TrithemiusCipher trithemiusCipher, FrequencyTable frequencyTable)
+        {
+            trithemiusCipher.FrequencyTable = frequencyTable;
         }
 
         private async Task<string> DownloadText(string url)
@@ -94,6 +107,15 @@ namespace CryptoApp
                 _frequencyTable = new FrequencyTable();
                 _frequencyTable.CalculateFrequencies(fileContent, _alphabet);
                 DisplayFrequencies();
+            }
+        }
+
+        private void UseForAttackButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_frequencyTable.GetFrequencies().Count != 0)
+            {
+                OutputText?.Invoke(_trithemiusCipher.AttackCipher(_mainInputText, _alphabet));
+                Close();
             }
         }
     }
