@@ -65,12 +65,12 @@ namespace CryptoApp.Ciphers.CipherImpl
                     var newChar =
                         alphabet.Value[
                             ((alphabet.Value.IndexOf(
-                                    input[i].ToString().ToUpper(),
-                                    StringComparison.Ordinal) +
-                                alphabet.Value.Length - (Key %
-                                    alphabet
-                                        .Value.Length)) %
-                            alphabet.Value.Length)];
+                                     input[i].ToString().ToUpper(),
+                                     StringComparison.Ordinal) +
+                                 alphabet.Value.Length - (Key %
+                                     alphabet
+                                         .Value.Length)) %
+                             alphabet.Value.Length)];
                     output.Append(char.IsLower(input[i]) ||
                                   char.IsWhiteSpace(input[i])
                         ? char.ToLower(newChar)
@@ -106,6 +106,50 @@ namespace CryptoApp.Ciphers.CipherImpl
                         if (score < 0.4)
                         {
                             possibleKeys.Add(new Tuple<int, int, int>(A, B, C));
+                        }
+                    }
+                }
+            }
+
+            if (possibleKeys.Count == 0)
+            {
+                return "No possible keys found.";
+            }
+
+            var output = new StringBuilder();
+            output.AppendLine("Possible decryptions:");
+            foreach (var key in possibleKeys)
+            {
+                TrithemiusCipher cipher = new TrithemiusCipher();
+                cipher.A = key.Item1;
+                cipher.B = key.Item2;
+                cipher.C = key.Item3;
+                output.AppendLine("--------------------------------------");
+                output.AppendLine(cipher.Decrypt(input, alphabet));
+            }
+
+            return output.ToString();
+        }
+
+        public string AttackCipherKeys(string cipherText, string plainText,
+            Alphabet alphabet)
+        {
+            var possibleKeys = new List<Tuple<int, int, int>>();
+
+            for (int A = 1; A < alphabet.Value.Length; A++)
+            {
+                for (int B = 0; B < alphabet.Value.Length; B++)
+                {
+                    for (int C = 0; C < alphabet.Value.Length; C++)
+                    {
+                        var decrypted = new TrithemiusCipher
+                                { A = A, B = B, C = C }
+                            .Decrypt(cipherText, alphabet);
+
+                        if (plainText.Equals(decrypted))
+                        {
+                            possibleKeys.Add(new Tuple<int, int, int>(A, B, C));
+                            break;
                         }
                     }
                 }

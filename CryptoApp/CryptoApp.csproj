@@ -90,13 +90,20 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
-        <Page Include="AboutWindow.xaml" />
-        <Page Include="FrequencyTableWindow.xaml" />
-        <Page Include="MainWindow.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Compile Include="AboutWindow.xaml.cs" />
+        <Compile Include="MainWindow.xaml.cs">
+          <DependentUpon>MainWindow.xaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Include="Utils\DictionaryChecker.cs" />
+        <Compile Include="Utils\FileEncryptor.cs" />
+        <Compile Include="Utils\FrequencyTable.cs" />
+        <Compile Include="Windows\AboutWindow.xaml.cs" />
+        <Compile Include="Windows\ActiveAttackWindow.xaml.cs">
+          <DependentUpon>ActiveAttackWindow.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\FrequencyTableWindow.xaml.cs">
+          <DependentUpon>FrequencyTableWindow.xaml</DependentUpon>
+        </Compile>
         <Compile Include="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
             <SubType>Code</SubType>
@@ -106,16 +113,13 @@
         <Compile Include="Ciphers\Cipher.cs" />
         <Compile Include="Ciphers\Alphabets\Alphabet.cs" />
         <Compile Include="Ciphers\Alphabets\Enumeration.cs" />
-        <Compile Include="DictionaryChecker.cs" />
-        <Compile Include="FrequencyTable.cs" />
-        <Compile Include="FrequencyTableWindow.xaml.cs">
-            <DependentUpon>FrequencyTableWindow.xaml</DependentUpon>
-        </Compile>
-        <Compile Include="FileEncryptor.cs" />
-        <Compile Include="MainWindow.xaml.cs">
-            <DependentUpon>MainWindow.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
+        <Page Include="MainWindow.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Include="Windows\AboutWindow.xaml" />
+        <Page Include="Windows\ActiveAttackWindow.xaml" />
+        <Page Include="Windows\FrequencyTableWindow.xaml" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.cs">

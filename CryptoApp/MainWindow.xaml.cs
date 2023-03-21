@@ -75,6 +75,7 @@ namespace CryptoApp
             _selectedCipher = new CaesarCipher();
             CaesarGroupBox.Visibility = Visibility.Visible;
             TrithemiusGroupBox.Visibility = Visibility.Collapsed;
+            TrithemiusActiveAttackButton.Visibility = Visibility.Collapsed;
         }
 
         private void TrithemiusMenuItem_OnClick(object sender,
@@ -83,6 +84,7 @@ namespace CryptoApp
             _selectedCipher = new TrithemiusCipher();
             CaesarGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusGroupBox.Visibility = Visibility.Visible;
+            TrithemiusActiveAttackButton.Visibility = Visibility.Visible;
         }
 
         private void SetMaxStep()
@@ -308,6 +310,13 @@ namespace CryptoApp
             {
                 _selectedCipher.Key = TrithemiusWordKeyInput.Text.GetHashCode();
             }
+        }
+
+        private void TrithemiusActiveAttackButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ActiveAttackWindow attackWindow = new ActiveAttackWindow
+            (InputTextBox.Text, OutputTextBox.Text, _alphabet);
+            attackWindow.ShowDialog();
         }
     }
 }
