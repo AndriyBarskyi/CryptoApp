@@ -90,6 +90,8 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
+        <Compile Include="Ciphers\CipherImpl\JammingCipher.cs" />
+        <Compile Include="Ciphers\CipherImpl\VernamCipher.cs" />
         <Compile Include="MainWindow.xaml.cs">
           <DependentUpon>MainWindow.xaml</DependentUpon>
           <SubType>Code</SubType>

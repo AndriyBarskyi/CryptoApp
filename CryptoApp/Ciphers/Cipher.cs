@@ -6,6 +6,7 @@ namespace CryptoApp.Ciphers
     public abstract class Cipher
     {
         public int Key { get; set; }
+        public string TextKey { get; set; }
         public int A { get; set; }
         public int B { get; set; }
         public int C { get; set; }

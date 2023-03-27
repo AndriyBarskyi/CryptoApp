@@ -30,6 +30,10 @@
                           Click="CaesarMenuItem_OnClick" />
                 <MenuItem Name="TrithemiusMenuItem" Header="_Trithemius"
                           Click="TrithemiusMenuItem_OnClick" />
+                <MenuItem Name="JammingMenuItem" Header="_Jamming" 
+                          Click="JammingMenuItem_OnClick"></MenuItem>
+                <MenuItem Name="VernamMenuItem" Header="_Vernam"
+                          Click="VernamCipher_OnClick"></MenuItem>
             </MenuItem>
             <MenuItem Name="FrequencyTables" Click="FrequencyTables_OnClick"
                       Header="_Frequency tables" />
@@ -47,7 +51,7 @@
                    Margin="0,0,0,5" />
             <TextBox Grid.Row="1" Name="InputTextBox" Margin="0,0,0,0"
                      VerticalScrollBarVisibility="Auto"
-                     TextWrapping="Wrap" AcceptsReturn="True" />
+                     TextWrapping="Wrap" AcceptsReturn="True"/>
             <Label Grid.Row="2" Content="Result:" FontWeight="Bold"
                    Margin="0,0,0,0" />
             <TextBox Grid.Row="3" Name="OutputTextBox" IsReadOnly="True"
@@ -134,6 +138,12 @@
                                      TextChanged="TrithemiusWordKeyInput_OnTextChanged"/>
                         </StackPanel>
                     </StackPanel>
+                </GroupBox>
+                <GroupBox x:Name="JammingGroupBox" Header="Jamming text"
+                          Visibility="Collapsed" Margin="0,0,0,20">
+                    <TextBox Name="JammingWordKeyInput" Width="200"
+                             Height="30" VerticalAlignment="Center"
+                             TextChanged="JammingWordKeyInput_OnTextChanged"/>
                 </GroupBox>
                 <Button Name="EncryptButton" Click="EncryptButton_Click"
                         Content="Encrypt" Width="120" Height="40"
