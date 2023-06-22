@@ -34,6 +34,8 @@
                           Click="JammingMenuItem_OnClick"></MenuItem>
                 <MenuItem Name="VernamMenuItem" Header="_Vernam"
                           Click="VernamCipher_OnClick"></MenuItem>
+                <MenuItem Name="RucksackMenuItem" Header="_Rucksack"
+                          Click="RucksackMenuItem_OnClick"></MenuItem>
             </MenuItem>
             <MenuItem Name="FrequencyTables" Click="FrequencyTables_OnClick"
                       Header="_Frequency tables" />
@@ -144,6 +146,29 @@
                     <TextBox Name="JammingWordKeyInput" Width="200"
                              Height="30" VerticalAlignment="Center"
                              TextChanged="JammingWordKeyInput_OnTextChanged"/>
+                </GroupBox>
+                <GroupBox x:Name="RucksackGroupBox" Header="Key parameters"
+                          Visibility="Collapsed" Margin="0,0,0,20">
+                    <StackPanel Orientation="Vertical" Margin="0,10,0,10"
+                                HorizontalAlignment="Center">
+                        <Label Name="LengthLabel" Content="Length of superincreasing sequence:" />
+                            <xctk:IntegerUpDown
+                                Name="LengthInput"
+                                Visibility="Visible" Minimum="8" Maximum="12"
+                                Value="10" ValueChanged="LengthInput_OnValueChanged"/>
+                            <Label Name="SeedLabel" Content="Seed:" />
+                            <xctk:IntegerUpDown
+                                Name="SeedInput"
+                                Visibility="Visible" Minimum="1" Value="1"
+                                ValueChanged="SeedInput_OnValueChanged"/>
+                            <Label Name="NLabel" Content="N (should be prime number):" />
+                            <xctk:IntegerUpDown
+                                Name="NInput"
+                                Visibility="Visible" Minimum="2"
+                                Value="13"
+                                ValueChanged="NInput_OnValueChanged
+            " />
+                    </StackPanel>
                 </GroupBox>
                 <Button Name="EncryptButton" Click="EncryptButton_Click"
                         Content="Encrypt" Width="120" Height="40"

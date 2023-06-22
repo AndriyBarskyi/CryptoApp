@@ -47,6 +47,7 @@
         <Reference Include="System.Net.Http">
             <HintPath>..\..\..\..\..\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Net.Http\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Net.Http.dll</HintPath>
         </Reference>
+        <Reference Include="System.Numerics" />
         <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
             <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
         </Reference>
@@ -92,6 +93,8 @@
         </ApplicationDefinition>
         <Compile Include="Ciphers\CipherImpl\JammingCipher.cs" />
         <Compile Include="Ciphers\CipherImpl\VernamCipher.cs" />
+        <Compile Include="Ciphers\RucksackCipher.cs" />
+        <Compile Include="Ciphers\RucksackParameterGenerator.cs" />
         <Compile Include="MainWindow.xaml.cs">
           <DependentUpon>MainWindow.xaml</DependentUpon>
           <SubType>Code</SubType>

@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,13 +20,21 @@ namespace CryptoApp
         private byte[] _aesKey; // ключ шифрування
         private Cipher _selectedCipher = new CaesarCipher();
         private int _key;
-        private bool isVernam = false;
+        private bool _isVernam;
 
+        private RucksackCipher _rucksackCipher;
+        private bool _isRucksack;
+        private BigInteger[] _encryptedList;
+        private int _superincreasingSeqLen = 10;
+        private int _seed = 1;
+        private int _n = 13;
+        
         public MainWindow()
         {
             InitializeComponent();
             SetMaxStep();
         }
+
         public delegate void SetOutputTextDelegate(string text);
 
         private void StepSlider_OnValueChanged(object sender,
@@ -42,10 +52,22 @@ namespace CryptoApp
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(InputTextBox.Text)) return;
-            if (isVernam)
+            if (_isVernam)
             {
                 _selectedCipher = new VernamCipher(InputTextBox.Text.Length);
             }
+            else if (_isRucksack)
+            {
+                _rucksackCipher = new RucksackCipher(_superincreasingSeqLen, 
+                _seed, _n);
+                OutputTextBox.Text = _rucksackCipher.Encrypt(InputTextBox.Text);
+                 /*foreach (var num in _encryptedList)
+                 {
+                     OutputTextBox.Text += num + " ";
+                 }*/
+                 return;
+            }
+
             _selectedCipher.Key = _key;
             OutputTextBox.Text =
                 _selectedCipher.Encrypt(InputTextBox.Text, _alphabet);
@@ -54,6 +76,11 @@ namespace CryptoApp
         private void DecryptButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(InputTextBox.Text)) return;
+            if (_isRucksack)
+            {
+                OutputTextBox.Text = _rucksackCipher.Decrypt(InputTextBox.Text);
+                return;
+            }
             _selectedCipher.Key = _key;
             OutputTextBox.Text =
                 _selectedCipher.Decrypt(InputTextBox.Text, _alphabet);
@@ -91,6 +118,7 @@ namespace CryptoApp
             _selectedCipher = new CaesarCipher();
             CaesarGroupBox.Visibility = Visibility.Visible;
             TrithemiusGroupBox.Visibility = Visibility.Collapsed;
+            RucksackGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusActiveAttackButton.Visibility = Visibility.Collapsed;
             BruteForceAttackButton.Visibility = Visibility.Visible;
             JammingGroupBox.Visibility = Visibility.Collapsed;
@@ -101,6 +129,7 @@ namespace CryptoApp
         {
             _selectedCipher = new TrithemiusCipher();
             CaesarGroupBox.Visibility = Visibility.Collapsed;
+            RucksackGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusGroupBox.Visibility = Visibility.Visible;
             TrithemiusActiveAttackButton.Visibility = Visibility.Visible;
             BruteForceAttackButton.Visibility = Visibility.Visible;
@@ -110,15 +139,29 @@ namespace CryptoApp
         private void JammingMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             CaesarGroupBox.Visibility = Visibility.Collapsed;
+            RucksackGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusActiveAttackButton.Visibility = Visibility.Collapsed;
             BruteForceAttackButton.Visibility = Visibility.Collapsed;
             JammingGroupBox.Visibility = Visibility.Visible;
         }
-        
+
         private void VernamCipher_OnClick(object sender, RoutedEventArgs e)
         {
-            isVernam = true;
+            _isVernam = true;
+            CaesarGroupBox.Visibility = Visibility.Collapsed;
+            TrithemiusGroupBox.Visibility = Visibility.Collapsed;
+            TrithemiusActiveAttackButton.Visibility = Visibility.Collapsed;
+            BruteForceAttackButton.Visibility = Visibility.Collapsed;
+            JammingGroupBox.Visibility = Visibility.Collapsed;
+            RucksackGroupBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void RucksackMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            _isRucksack = true;
+            RucksackGroupBox.Visibility = Visibility.Visible;
+            
             CaesarGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusGroupBox.Visibility = Visibility.Collapsed;
             TrithemiusActiveAttackButton.Visibility = Visibility.Collapsed;
@@ -127,7 +170,7 @@ namespace CryptoApp
         }
 
         #endregion
-        
+
         #region Alphabet selection
 
         private void EnglishAlphabet_OnSelected(object sender,
@@ -375,12 +418,29 @@ namespace CryptoApp
 
         #endregion
 
-        private void JammingWordKeyInput_OnTextChanged(object sender, TextChangedEventArgs e)
+        private void JammingWordKeyInput_OnTextChanged(object sender,
+            TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(JammingWordKeyInput.Text) ||
                 string.IsNullOrEmpty(InputTextBox.Text)) return;
             _selectedCipher = new JammingCipher(JammingWordKeyInput.Text,
                 InputTextBox.Text.Length, _alphabet);
+        }
+
+        private void LengthInput_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _superincreasingSeqLen = LengthInput.Value.GetValueOrDefault();
+        }
+
+        private void SeedInput_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _seed = SeedInput.Value.GetValueOrDefault();
+        }
+
+        private void NInput_OnValueChanged
+            (object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _n = NInput.Value.GetValueOrDefault();
         }
     }
 }

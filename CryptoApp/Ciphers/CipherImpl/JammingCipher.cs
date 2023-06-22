@@ -35,7 +35,7 @@ namespace CryptoApp.Ciphers.CipherImpl
                 }
                 int g = alphabet.Contains(char.ToUpper(_gamma[i])) ? 
                     alphabet.Value.IndexOf(char.ToUpper(_gamma[i])) : 
-                    _random.Next(alphabet.Value.Length-1);
+                    _random.Next(alphabet.Value.Length);
                 int y = (x + g) % alphabet.Value.Length;
                 encrypted.Append(char.IsUpper(c) ? 
                     alphabet.Value[y] : 

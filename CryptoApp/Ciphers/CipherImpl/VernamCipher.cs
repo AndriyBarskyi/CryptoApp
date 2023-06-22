@@ -45,6 +45,7 @@ namespace CryptoApp.Ciphers.CipherImpl
                 decryptedData[j] = (byte)(data[j] ^ key[j]);
             }
             return Encoding.UTF8.GetString(decryptedData);
+            
         }
 
         public override string AttackCipher(string input, Alphabet alphabet)
